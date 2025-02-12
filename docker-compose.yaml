@@ -1,0 +1,74 @@
+# To execute this docker compose yml file use `docker compose -f docker-compose.yaml up`
+# Add the `-d` flag at the end for detached execution
+# To stop the execution, hit Ctrl+C, and then `docker compose -f docker-compose.yaml down`
+services:
+  selenium_hub:
+    image: selenium/hub:latest
+    container_name: selenium-hub
+    restart: always
+    ports:
+      - "4444:4444"
+
+  selenium_node_chrome:
+    image: selenium/node-chrome:132.0-20250202
+    restart: on-failure:3
+    volumes:
+      - /dev/shm:/dev/shm
+    depends_on:
+      - selenium_hub
+    environment:
+      - SE_EVENT_BUS_HOST=selenium_hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+
+  selenium_node_firefox:
+    image: selenium/node-firefox:129.0-20250202
+    restart: on-failure:2
+    volumes:
+      - /dev/shm:/dev/shm
+    depends_on:
+      - selenium_hub
+    environment:
+      - SE_EVENT_BUS_HOST=selenium_hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+    deploy:
+      replicas: 2
+
+  chrome123:
+    image: selenium/node-chrome:123.0-20250202
+    restart: on-failure:3
+    volumes:
+      - /dev/shm:/dev/shm
+    depends_on:
+      - selenium_hub
+    environment:
+      - SE_EVENT_BUS_HOST=selenium_hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.17.1
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+      - xpack.security.enabled=false
+    ports:
+      - "9200:9200"
+    networks:
+      - elastic
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.17.1
+    container_name: kibana
+    ports:
+      - "5601:5601"
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    depends_on:
+      - elasticsearch
+    networks:
+      - elastic
+networks:
+  elastic:
+    driver: bridge

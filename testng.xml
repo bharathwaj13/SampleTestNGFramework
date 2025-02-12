@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="All Test Suite">
+    <listeners>
+        <listener class-name="org.bharath.listeners.Listener"/>
+        <listener class-name="org.bharath.listeners.MethodInterceptorListener"/>
+        <listener class-name="org.bharath.listeners.AnnotationTransformer"/>
+    </listeners>
+    <test verbose="2" preserve-order="true" thread-count="1"
+          name="test" parallel="methods">
+        <classes>
+<!--            <class name="org.bharath.tests.LoginPageTests"/>-->
+<!--            <class name="org.bharath.tests.OrangeHRMTests"/>-->
+            <class name="org.bharath.tests.AmazonTests"/>
+        </classes>
+    </test>
+</suite>
