@@ -1,6 +1,5 @@
 package org.bharath.factories;
 
-import org.bharath.driver.DriverManager;
 import org.bharath.enums.ConfigProperties;
 import org.bharath.utils.PropertyFileReader;
 import org.openqa.selenium.WebDriver;
@@ -12,6 +11,8 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 public final class DriverFactory {
 
@@ -25,10 +26,12 @@ public final class DriverFactory {
         if (browser.equalsIgnoreCase("chrome")) {
             ChromeOptions options = new ChromeOptions();
             if (PropertyFileReader.get(ConfigProperties.RUNMODE).equalsIgnoreCase("remote")) {
+                Map<String, Object> selenoidOptions = new HashMap<>();
+                selenoidOptions.put("enableVNC", true);
+                selenoidOptions.put("enableVideo", true);
                 options.setCapability("browserName", "chrome");
                 options.setCapability("browserVersion", version);
-                options.setCapability("enableVNC", true);
-                options.setCapability("enableVideo", true);
+                options.setCapability("selenoid:options", selenoidOptions);
                 driver = new RemoteWebDriver(new URL(PropertyFileReader.get(ConfigProperties.SELENIUMGRIDURL)), options);
             } else {
                 options.addArguments("--incognito");
