@@ -27,6 +27,8 @@ public final class DriverFactory {
             if (PropertyFileReader.get(ConfigProperties.RUNMODE).equalsIgnoreCase("remote")) {
                 options.setCapability("browserName", "chrome");
                 options.setCapability("browserVersion", version);
+                options.setCapability("enableVNC", true);
+                options.setCapability("enableVideo", true);
                 driver = new RemoteWebDriver(new URL(PropertyFileReader.get(ConfigProperties.SELENIUMGRIDURL)), options);
             } else {
                 options.addArguments("--incognito");
