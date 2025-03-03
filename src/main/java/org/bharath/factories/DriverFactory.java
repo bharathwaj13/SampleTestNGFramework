@@ -29,8 +29,8 @@ public final class DriverFactory {
                 Map<String, Object> selenoidOptions = new HashMap<>();
                 selenoidOptions.put("enableVNC", true);
                 selenoidOptions.put("enableVideo", true);
-                options.addArguments("--headless=new");
-                options.addArguments("--disable-gpu");
+                /*options.addArguments("--headless=new");
+                options.addArguments("--disable-gpu");*/
                 options.setCapability("browserName", "chrome");
                 options.setCapability("browserVersion", version);
                // options.setCapability("selenoid:options", selenoidOptions);
