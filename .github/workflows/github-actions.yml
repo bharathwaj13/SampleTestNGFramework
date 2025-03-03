@@ -94,4 +94,4 @@ jobs:
         if: steps.cache-primes.outputs.cache-hit != 'true'
         continue-on-error: false
         run: |
-          mvn -B clean test
+          mvn -B clean test -Djava.awt.headless=true
