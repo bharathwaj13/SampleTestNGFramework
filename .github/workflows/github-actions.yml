@@ -80,8 +80,15 @@ jobs:
           selenoid-start-arguments: |
             --args "-timeout 60s"
 
+      - name: Set up virtual display
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y xvfb
+          Xvfb :99 -screen 0 1920x1080x24 &
+          echo "DISPLAY=:99" >> $GITHUB_ENV
+
       - name: Execute Automation Suite
         if: steps.cache-primes.outputs.cache-hit != 'true'
         continue-on-error: false
         run: |
-          mvn -B clean test
+          mvn -B clean test -Djava.awt.headless=true
