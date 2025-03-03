@@ -32,7 +32,14 @@ jobs:
           selenoid-start-arguments: |
             --args "-timeout 60s"
 
+      - name: setup chromedriver
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: 132.0
+          install-chromedriver: true
+
       - name: Execute Automation Suite
         if: steps.cache-primes.outputs.cache-hit != 'true'
+        continue-on-error: false
         run: |
           mvn -B -Dmaven.test.failure.ignore=true clean test
