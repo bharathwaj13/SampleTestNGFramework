@@ -31,7 +31,7 @@ public final class DriverFactory {
                 selenoidOptions.put("enableVideo", true);
                 options.setCapability("browserName", "chrome");
                 options.setCapability("browserVersion", version);
-                options.setCapability("selenoid:options", selenoidOptions);
+               // options.setCapability("selenoid:options", selenoidOptions);
                 driver = new RemoteWebDriver(new URL(PropertyFileReader.get(ConfigProperties.SELENIUMGRIDURL)), options);
             } else {
                 options.addArguments("--incognito");

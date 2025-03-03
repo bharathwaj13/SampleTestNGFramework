@@ -1,11 +1,66 @@
 name: run amazon test in github actions
 
-on: [push,workflow_dispatch]
+on: [ push,workflow_dispatch ]
 jobs:
   run-web-test:
     runs-on: ubuntu-latest
 
+    services:
+      selenium-hub:
+        image: selenium/hub:latest
+        ports:
+          - 4444:4444
 
+      chrome-132:
+        image: selenium/node-chrome:132.0-20250202
+        options: >-
+          --shm-size=2g
+        env:
+          SE_EVENT_BUS_HOST: selenium-hub
+          SE_EVENT_BUS_PUBLISH_PORT: 4442
+          SE_EVENT_BUS_SUBSCRIBE_PORT: 4443
+        depends-on:
+          - selenium-hub
+
+      firefox-129:
+        image: selenium/node-firefox:129.0-20250202
+        options: >-
+          --shm-size=2g
+        env:
+          SE_EVENT_BUS_HOST: selenium-hub
+          SE_EVENT_BUS_PUBLISH_PORT: 4442
+          SE_EVENT_BUS_SUBSCRIBE_PORT: 4443
+        depends-on:
+          - selenium-hub
+
+      chrome-123:
+        image: selenium/node-chrome:123.0-20250202
+        options: >-
+          --shm-size=2g
+        env:
+          SE_EVENT_BUS_HOST: selenium-hub
+          SE_EVENT_BUS_PUBLISH_PORT: 4442
+          SE_EVENT_BUS_SUBSCRIBE_PORT: 4443
+        depends-on:
+          - selenium-hub
+
+      elasticsearch:
+        image: docker.elastic.co/elasticsearch/elasticsearch:8.17.1
+        ports:
+          - 9200:9200
+        env:
+          discovery.type: single-node
+          ES_JAVA_OPTS: -Xms512m -Xmx512m
+          xpack.security.enabled: false
+
+      kibana:
+        image: docker.elastic.co/kibana/kibana:8.17.1
+        ports:
+          - 5601:5601
+        env:
+          ELASTICSEARCH_HOSTS: http://elasticsearch:9200
+        depends-on:
+          - elasticsearch
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -32,14 +87,8 @@ jobs:
           selenoid-start-arguments: |
             --args "-timeout 60s"
 
-      - name: setup chromedriver
-        uses: browser-actions/setup-chrome@v1
-        with:
-          chrome-version: 132.0
-          install-chromedriver: true
-
       - name: Execute Automation Suite
         if: steps.cache-primes.outputs.cache-hit != 'true'
         continue-on-error: false
         run: |
-          mvn -B -Dmaven.test.failure.ignore=true clean test
+          mvn -B clean test
