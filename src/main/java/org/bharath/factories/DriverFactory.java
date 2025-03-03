@@ -30,7 +30,7 @@ public final class DriverFactory {
                 selenoidOptions.put("enableVNC", true);
                 selenoidOptions.put("enableVideo", true);
                 options.addArguments("--headless=new");
-                /*options.addArguments("--disable-gpu");*/
+                options.addArguments("--disable-gpu");
                 options.setCapability("browserName", "chrome");
                 options.setCapability("browserVersion", version);
                // options.setCapability("selenoid:options", selenoidOptions);
