@@ -3,7 +3,7 @@ name: run amazon test in github actions
 on: [ push,workflow_dispatch ]
 jobs:
   run-web-test:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     services:
       selenium-hub:
@@ -107,5 +107,5 @@ jobs:
         if: steps.cache-dependencies.outputs.cache-hit != 'true'
         continue-on-error: false
         run: |
-          mvn -B clean test -Djava.awt.headless=true
+          mvn clean test -Djava.awt.headless=true -verbose
 #          -Dtestng.dtd.http=true -verbose
