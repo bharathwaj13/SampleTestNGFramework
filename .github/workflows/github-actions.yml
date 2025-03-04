@@ -104,7 +104,8 @@ jobs:
         env:
           DISPLAY: :99
         timeout-minutes: 3
-        if: steps.cache-dependencies.outputs.cache-hit != 'true'
+#        if: steps.cache-dependencies.outputs.cache-hit != 'true'
         continue-on-error: false
         run: |
-          mvn -B clean test -Djava.awt.headless=true -Dtestng.dtd.http=true -verbose
+          mvn -B clean test -Djava.awt.headless=true
+#          -Dtestng.dtd.http=true -verbose
