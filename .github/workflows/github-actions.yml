@@ -107,7 +107,7 @@ jobs:
 #        if: steps.cache-dependencies.outputs.cache-hit != 'true'
         continue-on-error: false
         run: |
-          mvn clean test -Djava.awt.headless=true -verbose
+          mvn clean test -DsuiteXMLFile=testng.xml
 #          -Dtestng.dtd.http=true -verbose
 
       - name: Cache Save Maven packages
