@@ -19,8 +19,8 @@ jobs:
           SE_EVENT_BUS_HOST: selenium-hub
           SE_EVENT_BUS_PUBLISH_PORT: "4442"
           SE_EVENT_BUS_SUBSCRIBE_PORT: "4443"
-          SE_OPTS: --headless
-#            --disable-gpu --no-sandbox --disable-dev-shm-usage
+          SE_OPTS: --disable-gpu --no-sandbox --disable-dev-shm-usage
+#          --headless
 
       firefox-129:
         image: selenium/node-firefox:129.0-20250202
@@ -40,8 +40,8 @@ jobs:
           SE_EVENT_BUS_HOST: selenium-hub
           SE_EVENT_BUS_PUBLISH_PORT: "4442"
           SE_EVENT_BUS_SUBSCRIBE_PORT: "4443"
-          SE_OPTS: --headless
-#            --disable-gpu --no-sandbox --disable-dev-shm-usage
+          SE_OPTS: --disable-gpu --no-sandbox --disable-dev-shm-
+#
 
       elasticsearch:
         image: docker.elastic.co/elasticsearch/elasticsearch:8.17.1
@@ -101,7 +101,8 @@ jobs:
       - name: Execute Automation Suite
         env:
           DISPLAY: :99
+        timeout-minutes: 3
         if: steps.cache-primes.outputs.cache-hit != 'true'
         continue-on-error: false
         run: |
-          mvn -B clean test -Djava.awt.headless=true
+          mvn -B clean test -Djava.awt.headless=true -Dtestng.dtd.http=true -verbose
