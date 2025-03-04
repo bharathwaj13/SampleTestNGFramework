@@ -3,7 +3,7 @@ name: run amazon test in github actions
 on: [ push,workflow_dispatch ]
 jobs:
   run-web-test:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     services:
       selenium-hub:
@@ -76,9 +76,9 @@ jobs:
         continue-on-error: true
         with:
           path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          key: Linux-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
-            ${{ runner.os }}-maven-
+            Linux-maven-
 
 #      - name: Start selenoid
 #        uses: Xotabu4/selenoid-github-action@v2
@@ -104,7 +104,7 @@ jobs:
         env:
           DISPLAY: :99
         timeout-minutes: 3
-#        if: steps.cache-dependencies.outputs.cache-hit != 'true'
+        if: steps.cache-dependencies.outputs.cache-hit != 'true'
         continue-on-error: false
         run: |
           mvn -B clean test -Djava.awt.headless=true
